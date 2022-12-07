@@ -1,0 +1,122 @@
+---
+title: "M04-01 Tidy"
+author: "Marwan M"
+date: "`r Sys.Date()`"
+output: html_document
+---
+#install.packages("tidyverse") 
+
+```{r}
+#install.packages("tidyverse")
+library("tidyverse")
+```
+
+
+#tibble 
+
+```{r}
+cars.tib <- as_tibble(mtcars)
+
+cars.df <- as.data.frame(cars.tib)
+```
+
+#printing
+
+```{r}
+print(cars.tib, n = 15, width = Inf)
+```
+
+
+#subsetting
+
+```{r}
+cars.tib[[1]]
+```
+
+#tidydata 
+
+```{r}
+wide_pop <- read_csv("https://raw.githubusercontent.com/jsgriffin96/r_workshop_4/master/data/wide-population.csv")
+
+tidy_pop <- pivot_longer(wide_pop, c('2018','2019','2020'), names_to = "years", values_to = "population")
+
+long_states <- read_csv("https://raw.githubusercontent.com/jsgriffin96/r_workshop_4/master/data/long-population.csv")
+
+tidy_states <-  pivot_wider(long_states, names_from = "condition", values_from = "measure")
+
+```
+
+#sep and uniting data
+```{r}
+state_rate <- read_csv("https://raw.githubusercontent.com/jsgriffin96/r_workshop_4/master/data/state_rate.csv")
+
+tidy_rate <- separate(state_rate, rate, into = c("deaths", "population"))
+
+untidy_rate <- unite(tidy_rate, rate, deaths, population, sep = "/" )
+```
+
+#Missing Data
+
+```{r}
+airQ.df <- airquality
+
+summary(airQ.df)
+
+```
+
+#mean replacement 
+```{r}
+ozoneMean <- mean(airQ.df$Ozone, na.rm = TRUE)
+
+airQ.df["Ozone"][is.na(airQ.df["Ozone"])]
+```
+
+#data with dplyr
+
+```{r}
+cars <- mtcars 
+
+#filters 
+v8_auto <- filter(cars, cyl == 8, am == 0)
+
+#arrange 
+
+arrange(cars, desc(mpg))
+
+#select 
+select(cars, mpg, cyl, hp, wt )
+```
+
+#mutate
+
+```{r}
+mutate(cars, powerTOWeight = hp/wt)
+```
+
+#sumarise 
+
+```{r}
+summarise(cars, avgMPG = mean(mpg))
+
+by_cyl <- group_by(cars, cyl)
+
+summarise(by_cyl, avgMPG= mean(mpg))
+```
+
+#Piping
+
+
+```{r}
+cars %>%
+  select(mpg, cyl, hp, wt) %>%
+  mutate(ptw=hp/wt) %>%      
+  filter(mpg>18, ptw > 40)            
+
+narrow_cars <- select(cars, mpg, cyl, hp, wt)
+narrow_cars <- mutate(narrow_cars, ptw=hp/wt)
+narrow_cars <- filter(narrow_cars, mpg>18, ptw > 40)  
+```
+
+
+
+
