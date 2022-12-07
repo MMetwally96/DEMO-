@@ -1,0 +1,153 @@
+---
+title: "Module 5-1-Principle: R Programming"
+author: "Marwan M"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+
+#Logical operators
+#Equals
+
+2==5 
+
+"Marwan"=="Cool"
+
+#Not equal to
+5 != 9 
+
+"Mark" != "Grant"
+
+#less than
+512 < 1024
+
+5 < 5
+
+9 <= 5
+
+#greater than
+512 > 1024
+
+4 >= 4
+```
+
+```{r}
+
+#AND/OR/NOT
+
+TRUE & TRUE
+5>9 & 9>10 
+TRUE & FALSE
+FALSE & FALSE
+#OR (one condition needs to be true)
+TRUE | FALSE
+TRUE | TRUE
+FALSE | FALSE
+#NOT
+!TRUE
+!FALSE
+
+```
+
+```{r}
+#Control Structures
+password <- "dog"
+userInput <- "dog"
+
+
+##if else statements
+if(password == userInput) {
+  print("Correct Password!")
+} else if (password != userInput) {
+  print("Wrong Password!")
+} else{
+  print("Error")
+}
+
+  
+```
+
+```{r}
+##for loops 
+
+weeklySales <- c(70, 74, 67, 75, 80, 79, 75)
+sum <- 0                  
+for (sale in weeklySales) { 
+  print(sale)             
+  sum <- sum + sale         
+}
+
+randomNums <- sample(1:1000, 50)
+count <- 0
+for (number in randomNums) {
+  if (number > 500) {
+    count <- count + 1
+    print(number)
+  }
+}
+count
+
+
+# Creating functions
+
+printTen <- function(item){
+  for (i in 1:10) {
+    print(item)
+  }
+}
+printTen("Ok!")
+
+
+#function as arguments
+printTen(mean(weeklySales))
+
+#nested functions
+printTenAtPosition <- function(numbers, i){
+  printTen(numbers[i])
+}
+
+printTenAtPosition(weeklySales, 3)
+
+
+```
+
+```{r}
+# Apply 
+#apply (input is dataframe or matrix; output: vector,list, or array)
+
+carsOutput <- apply(mtcars, 2, sum) 
+class(carsOutput)
+colSums(mtcars)
+
+apply(mtcars, 1, sum)
+rowSums(mtcars)
+
+squaredCars <- apply(mtcars, 2, function(x) x^2)
+
+
+#apply (input: data frame or matrix; output:list)
+
+cities <- c('POMONA', 'CHINO hills', 'Los ANGELES')
+lowerCities <- lapply(cities, tolower)
+
+lapply(mtcars, function(x) x+2)
+lapply(mtcars$mpg, function(x) x+2)
+
+#sapply (input: list, vector, or data frame/output:vector or matrix)
+lowerCities <- sapply(cities, tolower)
+
+sapply(mtcars, function(x) x+2)
+sapply(mtcars$mpg, function(x) x+2)
+
+
+#tapply
+head(mtcars)
+tapply(mtcars$mpg, mtcars$cyl, mean)
+
+tapply(mtcars$hp, mtcars$cyl, mean)
+
+library(tidyverse)
+mtcars %>% 
+  group_by(cyl) %>%
+  summarise(avgMPG=mean(mpg))
